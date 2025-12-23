@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电商网站 - 注册</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="index.html">电商网站</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">首页</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="cart.html">购物车 <span id="cartCount" class="badge badge-light">0</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="orders.html">我的订单</a>
+                </li>
+                <li class="nav-item" id="loginLink">
+                    <a class="nav-link" href="login.html">登录</a>
+                </li>
+                <li class="nav-item" id="registerLink" style="display: none;">
+                    <a class="nav-link" href="register.html">注册</a>
+                </li>
+                <li class="nav-item dropdown" id="userDropdown" style="display: none;">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
+                        <span id="username"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="admin-products.html" id="adminProductsLink" style="display: none;">商品管理</a>
+                        <a class="dropdown-item" href="admin-orders.html" id="adminOrdersLink" style="display: none;">订单管理</a>
+                        <a class="dropdown-item" href="admin-reports.html" id="adminReportsLink" style="display: none;">销售报表</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" onclick="logout()">退出登录</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 注册表单 -->
+    <div class="form-container">
+        <h2>用户注册</h2>
+        <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
+        <div id="successMessage" class="alert alert-success" style="display: none;"></div>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="registerUsername">用户名</label>
+                <input type="text" class="form-control" id="registerUsername" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">邮箱</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" class="form-control" id="password" name="password" required minlength="6">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">确认密码</label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required minlength="6">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">注册</button>
+        </form>
+        <div class="text-center mt-3">
+            <p>已有账号？<a href="login.html">立即登录</a></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.2/dist/axios.min.js"></script>
+    <script src="js/config.js"></script>
+    <script>
+        // 在注册页面覆盖auth.js的自动检查功能
+        function checkUserSession() {
+            return Promise.resolve(null);
+        }
+        // 更新导航栏状态为未登录
+        function updateNavbar(user) {
+            document.getElementById('loginLink').style.display = 'block';
+            document.getElementById('registerLink').style.display = 'none';
+            document.getElementById('userDropdown').style.display = 'none';
+            document.getElementById('cartCount').textContent = '0';
+        }
+    </script>
+    <script src="js/auth.js"></script>
+    <script>
+        // 确保覆盖函数在auth.js加载后仍然有效
+        function checkUserSession() {
+            return Promise.resolve(null);
+        }
+        
+        function updateNavbar(user) {
+            document.getElementById('loginLink').style.display = 'block';
+            document.getElementById('registerLink').style.display = 'none';
+            document.getElementById('userDropdown').style.display = 'none';
+            document.getElementById('cartCount').textContent = '0';
+        }
+        
+        // 更新导航栏状态
+        window.addEventListener('DOMContentLoaded', function() {
+            updateNavbar();
+        });
+    </script>
+    <script>
+        // 注册表单提交处理
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            
+            // 清除之前的消息
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // 验证密码是否一致
+            if (password !== confirmPassword) {
+                errorMessage.textContent = '两次输入的密码不一致';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            register(username, email, password)
+                .then(response => {
+                    successMessage.textContent = '注册成功！请登录';
+                    successMessage.style.display = 'block';
+                    // 清空表单
+                    document.getElementById('registerForm').reset();
+                    // 3秒后跳转到登录页面
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 3000);
+                })
+                .catch(error => {
+                    if (error.response && error.response.status === 409) {
+                        errorMessage.textContent = '用户名已存在';
+                    } else {
+                        errorMessage.textContent = '注册失败，请稍后重试';
+                    }
+                    errorMessage.style.display = 'block';
+                    console.error('注册失败:', error);
+                });
+        });
+    </script>
+</body>
+</html>

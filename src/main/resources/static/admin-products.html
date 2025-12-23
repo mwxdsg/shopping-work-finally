@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电商网站 - 商品管理</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="index.html">电商网站</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">首页</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="cart.html">购物车 <span id="cartCount" class="badge badge-light">0</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="orders.html">我的订单</a>
+                </li>
+                <li class="nav-item" id="loginLink" style="display: none;">
+                    <a class="nav-link" href="login.html">登录</a>
+                </li>
+                <li class="nav-item" id="registerLink" style="display: none;">
+                    <a class="nav-link" href="register.html">注册</a>
+                </li>
+                <li class="nav-item dropdown" id="userDropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
+                        <span id="username"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item active" href="admin-products.html" id="adminProductsLink">商品管理</a>
+                        <a class="dropdown-item" href="admin-orders.html" id="adminOrdersLink">订单管理</a>
+                        <a class="dropdown-item" href="admin-reports.html" id="adminReportsLink">销售报表</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" onclick="logout()">退出登录</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 商品管理 -->
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>商品管理</h2>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#addProductModal">添加商品</button>
+        </div>
+        
+        <div id="productsList"></div>
+    </div>
+
+    <!-- 添加商品模态框 -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">添加商品</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProductForm">
+                        <div class="form-group">
+                            <label for="productName">商品名称</label>
+                            <input type="text" class="form-control" id="productName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productDescription">商品描述</label>
+                            <textarea class="form-control" id="productDescription" name="description" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="productPrice">商品价格</label>
+                            <input type="number" class="form-control" id="productPrice" name="price" step="0.01" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="productStock">商品库存</label>
+                            <input type="number" class="form-control" id="productStock" name="stock" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="productImage">商品照片</label>
+                            <input type="file" class="form-control-file" id="productImage" accept="image/*">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="submitAddProduct()">添加</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑商品模态框 -->
+    <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">编辑商品</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProductForm">
+                        <input type="hidden" id="editProductId">
+                        <div class="form-group">
+                            <label for="editProductName">商品名称</label>
+                            <input type="text" class="form-control" id="editProductName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductDescription">商品描述</label>
+                            <textarea class="form-control" id="editProductDescription" name="description" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductPrice">商品价格</label>
+                            <input type="number" class="form-control" id="editProductPrice" name="price" step="0.01" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductStock">商品库存</label>
+                            <input type="number" class="form-control" id="editProductStock" name="stock" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductImage">商品照片</label>
+                            <div id="currentProductImage" style="margin-bottom: 10px;"></div>
+                            <input type="file" class="form-control-file" id="editProductImage" accept="image/*">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="submitEditProduct()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.2/dist/axios.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // 在管理员页面手动检查用户会话并更新导航栏
+        window.addEventListener('DOMContentLoaded', function() {
+            checkUserSession().then(user => {
+                updateNavbar(user);
+                if (user) {
+                    updateCartCount();
+                    // 检查是否为管理员
+                    if (user.role !== 'ADMIN') {
+                        // 非管理员重定向到首页
+                        window.location.href = 'index.html';
+                    }
+                } else {
+                    // 未登录用户重定向到登录页面
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+    </script>
+    <script src="js/admin-products.js"></script>
+</body>
+</html>

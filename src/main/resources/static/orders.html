@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电商网站 - 我的订单</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="index.html">电商网站</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">首页</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="cart.html">购物车 <span id="cartCount" class="badge badge-light">0</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="orders.html">我的订单</a>
+                </li>
+                <li class="nav-item" id="loginLink">
+                    <a class="nav-link" href="login.html">登录</a>
+                </li>
+                <li class="nav-item" id="registerLink">
+                    <a class="nav-link" href="register.html">注册</a>
+                </li>
+                <li class="nav-item dropdown" id="userDropdown" style="display: none;">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
+                        <span id="username"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="admin-products.html" id="adminProductsLink" style="display: none;">商品管理</a>
+                        <a class="dropdown-item" href="admin-orders.html" id="adminOrdersLink" style="display: none;">订单管理</a>
+                        <a class="dropdown-item" href="admin-reports.html" id="adminReportsLink" style="display: none;">销售报表</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" onclick="logout()">退出登录</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 订单列表 -->
+    <div class="container mt-5">
+        <h2 class="mb-4">我的订单</h2>
+        
+        <div id="ordersEmpty" class="alert alert-info" style="display: none;">
+            您还没有订单，去 <a href="index.html">首页</a> 选购商品吧！
+        </div>
+        
+        <div id="ordersList" style="display: none;"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.2/dist/axios.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // 在订单页面手动检查用户会话并更新导航栏
+        window.addEventListener('DOMContentLoaded', function() {
+            checkUserSession().then(user => {
+                updateNavbar(user);
+                if (user) {
+                    updateCartCount();
+                }
+            });
+        });
+    </script>
+    <script src="js/orders.js"></script>
+</body>
+</html>
