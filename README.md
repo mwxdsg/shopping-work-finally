@@ -1,4 +1,6 @@
 莫文轩 202330451361 23级计算机科学与技术二班
+
+
 这是一个基于Spring Boot的电子商务网站，采用前后端一体化设计（前端静态资源直接放在Spring Boot的static目录中）。项目遵循标准的分层架构模式，代码组织清晰，便于维护和扩展。
 
 后端代码结构（Java）
@@ -12,6 +14,7 @@ Product.java：商品信息（ID、名称、描述、价格、图片URL、库存
 Order.java：订单信息（ID、订单号、用户ID、总金额、地址、邮箱、备注等）
 OrderItem.java：订单项（关联订单和商品，包含数量和价格）
 CartItem.java：购物车项（关联用户和商品，包含数量和价格）
+
 2. 数据访问层（Repository）- 数据库操作
 使用Spring Data JPA简化数据库访问：
 
@@ -19,6 +22,7 @@ UserRepository.java：用户数据访问接口
 ProductRepository.java：商品数据访问接口
 OrderRepository.java：订单数据访问接口
 CartItemRepository.java：购物车数据访问接口
+
 3. 服务层（Service）- 业务逻辑
 封装核心业务逻辑，实现业务规则：
 
@@ -27,6 +31,7 @@ ProductService.java/ProductServiceImpl.java：商品管理（增删改查、库�
 OrderService.java/OrderServiceImpl.java：订单管理（创建、查询、状态更新）
 CartService.java/CartServiceImpl.java：购物车管理（添加、删除、更新数量）
 SalesReportService.java/SalesReportServiceImpl.java：销售报表统计
+
 4. 控制器层（Controller）- API接口
 处理HTTP请求，提供RESTful API：
 
@@ -35,6 +40,7 @@ ProductController.java：商品相关接口（查询、添加、更新、删除�
 OrderController.java：订单相关接口（创建、查询、管理）
 CartController.java：购物车相关接口（添加、删除、查询）
 SalesReportController.java：销售报表接口（销售数据统计）
+
 5. 配置层（Config）- 系统配置
 管理项目全局配置：
 
@@ -42,6 +48,7 @@ CorsConfig.java：跨域资源共享配置
 SecurityConfig.java：Spring Security安全配置
 StaticResourceConfig.java：静态资源映射（处理商品图片访问）
 DataInitializer.java：初始数据加载（可选）
+
 6. 启动类
 ShopApplication.java：Spring Boot应用入口，启动整个项目
 前端代码结构（静态资源）
